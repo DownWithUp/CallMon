@@ -10,6 +10,7 @@
                             name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
                             processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(linker, "/ENTRY:WinMain")
+#pragma comment(linker, "/SUBSYSTEM:WINDOWS")
 #pragma comment(lib, "UxTheme.lib")
 #pragma comment(lib, "Shlwapi.lib")
 
@@ -77,6 +78,7 @@ BOOL WINAPI EventHandler(HWND hwnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
         return(FALSE);
     case WM_CLOSE:
         DestroyWindow(hwnd);
+        PostQuitMessage(0);
         return(FALSE);
     case WM_SIZING:
         rWindow = *((RECT*)lParam);
