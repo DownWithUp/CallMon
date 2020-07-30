@@ -3,7 +3,7 @@ CallMon is a system call monitoring tool that works on Windows 10 versions 2004+
 
 ## Usage
  * <b>CallMon requires driver signature enforcement (DSE) to be disabled. </b>
- * Download release (or build from source)
+ * Download release [here](https://github.com/DownWithUp/CallMon/releases/tag/v1.0.0) (or download and build from source)
  * Ensure both CallMon.exe and AltCall.sys are in the same directory
  * Run CallMon.exe as an administrator
  * Click on "Initialize"
