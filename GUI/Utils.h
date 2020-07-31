@@ -308,7 +308,7 @@ BOOL LoadDriver(HANDLE hDriver)
     if (pNtLoadDriver = (NtLoadDriver)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtLoadDriver"))
     {
         ntRet = pNtLoadDriver(&usDriver);
-        if (!ntRet)
+        if ((!ntRet) || (ntRet == 0xC000010E)) // STATUS_IMAGE_ALREADY_LOADED
         {
             return(TRUE);
         }
