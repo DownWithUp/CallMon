@@ -246,26 +246,6 @@ BOOL CommandHandler(HWND hwnd, WPARAM wParam, LPARAM lParam) {
                     return(FALSE);
                 }
             }
-            if (ObtainDevice())
-            {
-                if (CreatePipe())
-                {
-                    if (!pGlobalStackMem)
-                    {
-                        pGlobalStackMem = VirtualAlloc(0, GLOBAL_STACK_MEM_SIZE, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-                        if (!pGlobalStackMem)
-                        {
-                            MessageBoxA(hwnd, "Unable to allocate memory for stack capture!", "Fatal Error", MB_ICONERROR);
-                            ExitProcess(-1);
-                        }
-                    }
-                    if (hGlobalPipe != INVALID_HANDLE_VALUE)
-                    {
-                        hGlobalListenThread = CreateThread(NULL, 0, &ListenProc, hGlobalPipe, 0, NULL);
-                        DeviceIoControl(hGlobalDriver, IOCTL_INIT, NULL, 0, NULL, 0, NULL, NULL);
-                    }
-                }
-            }
             else
             {
                 hDriver = CreateFileA("AltCall.sys", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, 0);
@@ -273,28 +253,30 @@ BOOL CommandHandler(HWND hwnd, WPARAM wParam, LPARAM lParam) {
                 {
                     if ((!GetDriverPrivilege()) || (!LoadDriver(hDriver)))
                     {
-                        MessageBoxA(hwnd, "Unable to load driver! Ensure it is in the same directory as" 
+                        MessageBoxA(hwnd, "Unable to load driver! Ensure it is in the same directory as"
                             "this program and DSE is disabled.", "Error", MB_ICONERROR);
+                        CloseHandle(hDriver);
+                        return(FALSE);
+                       
                     }
                     CloseHandle(hDriver);
                 }
-                if ((ObtainDevice()) && (CreatePipe()))
+                if (!pGlobalStackMem)
                 {
+                    pGlobalStackMem = VirtualAlloc(0, GLOBAL_STACK_MEM_SIZE, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
                     if (!pGlobalStackMem)
                     {
-                        pGlobalStackMem = VirtualAlloc(0, GLOBAL_STACK_MEM_SIZE, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-                        if (!pGlobalStackMem)
-                        {
-                            MessageBoxA(hwnd, "Unable to allocate memory for stack capture!", "Fatal Error", MB_ICONERROR);
-                            ExitProcess(-1);
-                        }
+                        MessageBoxA(hwnd, "Unable to allocate memory for stack capture!", "Fatal Error", MB_ICONERROR);
+                        ExitProcess(-1);
                     }
-                    if (hGlobalPipe != INVALID_HANDLE_VALUE)
-                    {
-                        hGlobalListenThread = CreateThread(NULL, 0, &ListenProc, hGlobalPipe, 0, NULL);
-                        DeviceIoControl(hGlobalDriver, IOCTL_INIT, NULL, 0, NULL, 0, NULL, NULL);
-                    }
-                }           
+                }
+                ObtainDevice();
+                CreatePipe();
+                if ((hGlobalPipe != INVALID_HANDLE_VALUE) && (hGlobalDriver != INVALID_HANDLE_VALUE))
+                {
+                    hGlobalListenThread = CreateThread(NULL, 0, &ListenProc, hGlobalPipe, 0, NULL);
+                    DeviceIoControl(hGlobalDriver, IOCTL_INIT, NULL, 0, NULL, 0, NULL, NULL);
+                }
             }
         }
         return(FALSE);
@@ -351,5 +333,6 @@ BOOL CommandHandler(HWND hwnd, WPARAM wParam, LPARAM lParam) {
 INT CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     ShowDialog(0);
+    ExitProcess(0);
     return(0);
 }
