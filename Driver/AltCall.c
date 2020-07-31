@@ -173,11 +173,17 @@ NTSTATUS DeviceDispatch(PDEVICE_OBJECT DeviceObject, PIRP Irp)
             }
             break;
         case IOCTL_INIT:
+            if (hGlobalPipe)
+            {
+                ZwClose(hGlobalPipe);
+                hGlobalPipe = 0;
+            }
             if (!hGlobalPipe)
             {
                 RtlInitUnicodeString(&usPipe, L"\\Device\\NamedPipe\\CallMonPipe");
                 InitializeObjectAttributes(&objPipe, &usPipe, OBJ_KERNEL_HANDLE, 0, 0);
-                if (NT_SUCCESS(ZwCreateFile(&hGlobalPipe, FILE_WRITE_DATA | SYNCHRONIZE, &objPipe, &ioBlock, NULL, 0, 0, FILE_OPEN, FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0)))
+                if (NT_SUCCESS(ZwCreateFile(&hGlobalPipe, FILE_WRITE_DATA | SYNCHRONIZE, &objPipe, &ioBlock, NULL, 0, 0, FILE_OPEN, 
+                                            FILE_SYNCHRONOUS_IO_NONALERT | FILE_DELETE_ON_CLOSE, NULL, 0)))
                 {
                     pPool = ExAllocatePool(PagedPool, 0x1000);
                     ntRet = STATUS_SUCCESS;
