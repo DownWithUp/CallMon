@@ -253,7 +253,7 @@ BOOL CommandHandler(HWND hwnd, WPARAM wParam, LPARAM lParam) {
                 {
                     if ((!GetDriverPrivilege()) || (!LoadDriver(hDriver)))
                     {
-                        MessageBoxA(hwnd, "Unable to load driver! Ensure it is in the same directory as"
+                        MessageBoxA(hwnd, "Unable to load driver! Ensure it is in the same directory as "
                             "this program and DSE is disabled.", "Error", MB_ICONERROR);
                         CloseHandle(hDriver);
                         return(FALSE);
