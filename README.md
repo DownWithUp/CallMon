@@ -20,7 +20,7 @@ Because the system call handler function is called everytime a targeted process 
 [0xcpu's Research on AltSyscallHandlers](https://github.com/0xcpu/WinAltSyscallHandler)
 
 # Rust Driver Version
-Optionally, there is a version of the AltCall.sys driver written in Rust. The sources and binary are included only in the repository and not in the release. I highly recommended reading not-matthias'[blog post](https://not-matthias.github.io/kernel-driver-with-rust/) on building Windows drivers in Rust. In addition, I will mention that I worked on this to better my Rust skills and not to make a memory safe driver. I heavily used "unsafe" Rust code, and kernel interactions in themselves can always go awire. <br>
+Optionally, there is a version of the AltCall.sys driver written in Rust. The sources and binary are included only in the repository and not in the release. I highly recommended reading not-matthias' [blog post](https://not-matthias.github.io/kernel-driver-with-rust/) on building Windows drivers in Rust. In addition, I will mention that I worked on this to better my Rust skills and not to make a memory safe driver. I heavily used "unsafe" Rust code, and kernel interactions in themselves can always go awire. <br>
 ### Build
 If you are not already on the nightly channel, change to it using:<br>
 <code>rustup toolchain install nightly</code><br>
