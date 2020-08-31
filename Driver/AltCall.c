@@ -27,7 +27,6 @@ ZwSetInformationProcess         pZwSetInformationProcess;
 PsSuspendProcess                pPsSuspendProcess;
 PsResumeProcess                 pPsResumeProcess;
 HANDLE                          hGlobalPipe = 0;
-PVOID                           pPool;
 
 NTSTATUS DriverUnload(PDRIVER_OBJECT DriverObject)
 {
@@ -185,7 +184,6 @@ NTSTATUS DeviceDispatch(PDEVICE_OBJECT DeviceObject, PIRP Irp)
                 if (NT_SUCCESS(ZwCreateFile(&hGlobalPipe, FILE_WRITE_DATA | SYNCHRONIZE, &objPipe, &ioBlock, NULL, 0, 0, FILE_OPEN, 
                                             FILE_SYNCHRONOUS_IO_NONALERT | FILE_DELETE_ON_CLOSE, NULL, 0)))
                 {
-                    pPool = ExAllocatePool(PagedPool, 0x1000);
                     ntRet = STATUS_SUCCESS;
                 }
                 else
