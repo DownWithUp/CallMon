@@ -29,4 +29,4 @@ Override using:<br>
 ### C VS. Rust
 Besides, the obvious syntax differences, I also made some design changes:<br>
 * Rust version uses ProbeForRead instead of MmHighestUserAddress and MmIsAddressValid check for stack pointer.
-* Rust version has no remove process IOCTL handling function (possibly coming soon?)  
+* Rust version ~~has no remove process IOCTL handling function (possibly coming soon?)~~ now has support for removing processes!
