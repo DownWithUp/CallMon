@@ -7,6 +7,7 @@
 use winapi::shared::ntdef::{ULONG, USHORT, UCHAR, KIRQL, HANDLE};
 use winapi::um::winnt::M128A;
 use winapi::km::wdm::KPROCESSOR_MODE;
+use winapi::um::winnt::ACCESS_MASK;
 pub type QWORD = u64;
 pub const FILE_DEVICE_SECURE_OPEN: ULONG            = 0x00000100;
 pub const FILE_DELETE_ON_CLOSE: ULONG               = 0x00001000;
@@ -31,6 +32,13 @@ pub struct _CLIENT_ID
 }
 pub type CLIENT_ID = _CLIENT_ID;
 pub type PCLIENT_ID = *mut _CLIENT_ID;
+
+pub struct _OBJECT_HANDLE_INFORMATION {
+    pub HandleAttributes: ULONG,
+    pub GrantedAccess: ACCESS_MASK,
+} 
+pub type OBJECT_HANDLE_INFORMATION = _OBJECT_HANDLE_INFORMATION;
+pub type POBJECT_HANDLE_INFORMATION =  *mut _OBJECT_HANDLE_INFORMATION;
 
 pub struct _CUSTOM_HEADER
 {
@@ -60,15 +68,7 @@ pub union u3
     pub ExceptionFrame: QWORD,
 }
 
-pub struct _DEBUG_REGS
-{
-    pub DebugControl: QWORD,
-    pub LastBranchToRip: QWORD,
-    pub LastBranchFromRip: QWORD,  
-    pub LastExceptionToRip: QWORD,
-    pub LastExceptionFromRip: QWORD,
-}
-
+#[repr(C)]
 pub struct _KTRAP_FRAME 
 {
      //
@@ -164,7 +164,13 @@ pub struct _KTRAP_FRAME
     // Special debug registers.
     //
 
-    pub DebugRegs: _DEBUG_REGS,
+    //pub DebugRegs: _DEBUG_REGS,
+
+    pub DebugControl: QWORD,
+    pub LastBranchToRip: QWORD,
+    pub LastBranchFromRip: QWORD,  
+    pub LastExceptionToRip: QWORD,
+    pub LastExceptionFromRip: QWORD,
          
      //
      //  Segment registers

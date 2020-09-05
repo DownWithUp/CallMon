@@ -3,7 +3,9 @@ use winapi::km::wdm::IO_PRIORITY::KPRIORITY_BOOST;
 use winapi::um::winnt::ACCESS_MASK;
 use winapi::shared::ntdef::*;
 use winapi::shared::basetsd::SIZE_T;
+//crate::defines
 use crate::PCLIENT_ID;
+use crate::POBJECT_HANDLE_INFORMATION;
 
 extern "system" {
 
@@ -41,5 +43,10 @@ extern "system" {
 
     pub fn PsGetProcessId(Process: PEPROCESS) -> HANDLE;
 
+    pub fn ObReferenceObjectByHandle(Handle: HANDLE, DesiredAccess: ACCESS_MASK, ObjectType: PVOID, AccessMode: KPROCESSOR_MODE,
+        Object: *mut PVOID, HandleInformation: POBJECT_HANDLE_INFORMATION) -> NTSTATUS;
+
     pub fn PsGetCurrentProcess() -> PEPROCESS;
+
+    pub fn ObDereferenceObject(Object: PVOID) -> NTSTATUS;
 }
